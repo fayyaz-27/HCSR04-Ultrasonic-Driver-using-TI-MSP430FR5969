@@ -7,7 +7,7 @@
 #define TRIGGER BIT3   // P4.3
 #define ECHO    BIT4   // P2.4
 #define LED     BIT0   // P1.0
-#define BUZZER BIT2
+#define BUZZER BIT5
 
 #define TIMEOUT 30000      // Max pulse width to consider (30ms)
 #define DIST_MIN 2         // Minimum reliable distance (cm)
