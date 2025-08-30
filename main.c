@@ -7,6 +7,7 @@
 #define TRIGGER BIT3   // P4.3
 #define ECHO    BIT4   // P2.4
 #define LED     BIT0   // P1.0
+#define BUZZER BIT2
 
 #define TIMEOUT 30000      // Max pulse width to consider (30ms)
 #define DIST_MIN 2         // Minimum reliable distance (cm)
@@ -85,10 +86,11 @@ int main(void){
     CSCTL0_H = 0;              // Lock CS
 
     //   GPIO 
-    P1DIR |= LED; P1OUT &= ~LED;
-    P4DIR |= TRIGGER; P4OUT &= ~TRIGGER;
+    P1DIR |= LED | BUZZER; P1OUT &= ~(LED | BUZZER);
+    P4DIR |= TRIGGER ; P4OUT &= ~TRIGGER; 
     P2DIR &= ~ECHO; P2REN &= ~ECHO; // Echo input
     PM5CTL0 &= ~LOCKLPM5; // Unlock GPIOs
+
 
     // UART ---
     uart_init();
@@ -111,7 +113,14 @@ int main(void){
         if(distance_cm < DIST_MIN || distance_cm > DIST_MAX) distance_cm = 0;
 
         // LED indication
-        if(distance_cm) P1OUT |= LED; else P1OUT &= ~LED;
+        if((distance_cm < 30) && (distance_cm > 1)) P1OUT |= LED | BUZZER; else P1OUT &= ~(LED | BUZZER);
+
+    //    if((distance_cm < 30) && (distance_cm > 1)){
+    //       P1OUT |= BUZZER;  // Turn buzzer ON
+           
+    //         } else {
+    //       P1OUT &= ~BUZZER; // Turn buzzer OFF
+    //         }
 
         // UART print
         char buffer[20];
